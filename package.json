@@ -1,0 +1,33 @@
+{
+  "name": "pandora-dashboard",
+  "version": "1.0.0",
+  "description": "A local Dashboard for the Pandora.js.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/midwayjs/pandora-dashboard.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/midwayjs/pandora-dashboard/issues"
+  },
+  "homepage": "https://github.com/midwayjs/pandora-dashboard#readme",
+  "dependencies": {
+    "koa": "^2.4.1",
+    "koa-error": "^3.1.0",
+    "koa-onerror": "^4.0.0",
+    "koa-router": "^7.3.0"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.0.41",
+    "@types/koa-router": "^7.0.26",
+    "@types/node": "^8.0.53",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.6.1"
+  }
+}
