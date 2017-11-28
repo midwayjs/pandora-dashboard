@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "build": "npm run lint && tsc && npm run build-public",
+    "lint": "tslint --format prose -c tslint.json 'src/**/*.ts' 'test/**/*.ts' && npm run lint-public",
+    "build-public": "webpack",
+    "watch-public": "webpack -w",
+    "lint-public": "eslint -c public/.eslintrc 'public/src/**/*.jsx'"
   },
   "repository": {
     "type": "git",
@@ -20,14 +24,34 @@
   "dependencies": {
     "koa": "^2.4.1",
     "koa-error": "^3.1.0",
+    "koa-mount": "^3.0.0",
     "koa-onerror": "^4.0.0",
-    "koa-router": "^7.3.0"
+    "koa-router": "^7.3.0",
+    "koa-static": "^4.0.2"
   },
   "devDependencies": {
     "@types/koa": "^2.0.41",
     "@types/koa-router": "^7.0.26",
     "@types/node": "^8.0.53",
+    "antd": "^2.13.10",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.2",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.7",
+    "eslint": "^4.12.0",
+    "eslint-plugin-react": "^7.5.1",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "react": "^16.1.1",
+    "react-dom": "^16.1.1",
+    "react-icons": "^2.2.7",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "style-loader": "^0.19.0",
     "ts-node": "^3.3.0",
-    "typescript": "^2.6.1"
+    "tslint": "^4.5.1",
+    "typescript": "^2.6.1",
+    "webpack": "^3.8.1"
   }
 }

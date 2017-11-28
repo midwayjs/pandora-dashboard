@@ -1,0 +1,11 @@
+{
+  "parser": "babel-eslint",
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "env": {
+    "browser": true
+  },
+  "rules": {
+    "react/prop-types": false,
+    "react/jsx-no-target-blank": false
+  }
+}

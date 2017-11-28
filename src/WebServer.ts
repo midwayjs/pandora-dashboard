@@ -1,7 +1,9 @@
 import * as Koa from 'koa';
-import * as Router from "koa-router";
+import * as Router from 'koa-router';
 
 import {createServer, Server} from 'http';
+
+const methods = ['get', 'put', 'post', 'patch', 'delete', 'del'];
 
 export abstract class WebServer extends Koa {
 
@@ -20,7 +22,24 @@ export abstract class WebServer extends Koa {
     this.server = createServer(this.callback());
   }
 
-  abstract setup();
+  setup() {
+    const router = this.router;
+    const routes: any[] = this.getRoutes();
+    for(const Route of routes) {
+      const routePath = Route.route;
+      const route = new Route(this);
+      if(route.setup) {
+        route.setup();
+      }
+      for(const method of methods) {
+        if(route[method]) {
+          router[method](routePath, route[method].bind(route));
+        }
+      }
+    }
+  }
+
+  abstract getRoutes();
   abstract getPort(): {port: number, host: string};
 
   async start() {

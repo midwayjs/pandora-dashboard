@@ -1,0 +1,14 @@
+@import '~antd/dist/antd.css';
+body {
+    color: #000;
+}
+.actionIcon {
+    color: #476ad6;
+}
+.actionIcon:hover {
+    color: #ff7a34;
+}
+
+.ant-card-head {
+    padding: 0 15px !important;
+}
