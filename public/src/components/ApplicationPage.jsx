@@ -3,6 +3,10 @@ import { Breadcrumb, Layout, Menu } from 'antd';
 const {Sider, Content} = Layout;
 import { Link } from 'react-router-dom';
 
+const noSiderMethods = [
+  'traceViewer'
+];
+
 export class ApplicationPage extends Component {
 
   constructor(props) {
@@ -23,9 +27,7 @@ export class ApplicationPage extends Component {
   }
 
   get methodName () {
-    const urlSpilited = this.props.match.url.split('/');
-    const methodName = urlSpilited[urlSpilited.length - 1];
-    return methodName;
+    return this.props.match.params.methodName;
   }
 
   renderBreadcrumb() {
@@ -43,12 +45,20 @@ export class ApplicationPage extends Component {
 
     const methodName = this.methodName;
 
-    return <div>
-       <Layout style={{background: '#fff'}} >
+    const content = <Content style={{padding: '5px 15px 15px 30px'}} >
+        {this.renderPage()}
+      </Content>;
+
+    if(noSiderMethods.indexOf(methodName) > -1) {
+      content.props.style.padding = '0 0 15px 0';
+      return content;
+    }
+
+    return <Layout style={{background: '#fff'}} >
         <Sider width={200} style={{ background: '#fff' }} >
           <Menu style={{minHeight: '100%'}} selectedKeys={[methodName]}>
             <Menu.Item key="stdout">
-              <Link to={`/application/${this.appName}/stdout`} >Stdout</Link>
+              <Link to={`/application/${this.appName}/stdout`} >Standard Output</Link>
             </Menu.Item>
             <Menu.Item key="processStructures">
               <Link to={`/application/${this.appName}/processStructures`} >Process Structures</Link>
@@ -64,11 +74,8 @@ export class ApplicationPage extends Component {
             </Menu.Item>
           </Menu>
         </Sider>
-         <Content style={{padding: '5px 15px 15px 30px'}} >
-           {this.renderPage()}
-         </Content>
+        {content}
       </Layout>
-    </div>
 
   }
   render () {

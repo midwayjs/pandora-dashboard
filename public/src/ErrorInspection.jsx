@@ -6,6 +6,7 @@ export class ErrorInspection extends ApplicationPage {
 
   renderPage () {
     return <div>
+      <h3 style={{marginBottom: 20}} >Recent 1000 Errors</h3>
       <SingleMsg/>
       <SingleMsg/>
       <SingleMsg/>

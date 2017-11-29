@@ -13,4 +13,12 @@ export default class Dashboard extends WebServer {
     const host: string = process.env.DASHBOARD_HOST || '127.0.0.1';
     return { port, host };
   }
+
+  async start () {
+    await super.start();
+    const {port, host} = this.getPort();
+    console.log(`Pandora.js Dashboard started, open http://${host}:${port}/`);
+
+  }
+
 }

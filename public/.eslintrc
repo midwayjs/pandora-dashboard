@@ -6,6 +6,6 @@
   },
   "rules": {
     "react/prop-types": false,
-    "react/jsx-no-target-blank": false
+    "react/display-name": false
   }
 }

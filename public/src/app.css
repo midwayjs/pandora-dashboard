@@ -12,3 +12,12 @@ body {
 .ant-card-head {
     padding: 0 15px !important;
 }
+
+.ant-table * {
+    font-size: 12px;
+}
+
+
+body .ant-tabs-nav-wrap {
+    height: 42px;
+}

@@ -9,6 +9,7 @@ import {ProcessStructures} from "./ProcessStructures";
 import {ErrorInspection} from "./ErrorInspection";
 import {Metrics} from "./Metrics";
 import {Trace} from "./Trace";
+import {TraceViewer} from "./TraceViewer";
 
 const ScrollToTop = () => {
   window.scrollTo(0, 0);
@@ -20,11 +21,12 @@ ReactDOM.render((
     <LayoutCpnt>
       <Route component={ScrollToTop} />
       <Route exact path='/' component={Home} ></Route>
-      <Route path='/application/:appName/stdout' component={Stdout} ></Route>
-      <Route path='/application/:appName/processStructures' component={ProcessStructures} ></Route>
-      <Route path='/application/:appName/errorInspection' component={ErrorInspection} ></Route>
-      <Route path='/application/:appName/metrics' component={Metrics} ></Route>
-      <Route path='/application/:appName/trace' component={Trace} ></Route>
+      <Route path='/application/:appName/:methodName(stdout)' component={Stdout} ></Route>
+      <Route path='/application/:appName/:methodName(processStructures)' component={ProcessStructures} ></Route>
+      <Route path='/application/:appName/:methodName(errorInspection)' component={ErrorInspection} ></Route>
+      <Route path='/application/:appName/:methodName(metrics)' component={Metrics} ></Route>
+      <Route path='/application/:appName/:methodName(trace)' component={Trace} ></Route>
+      <Route path='/application/:appName/:methodName(traceViewer)/:traceId' component={TraceViewer} ></Route>
     </LayoutCpnt>
   </BrowserRouter>
 ), document.getElementById('DUMP_APP_HERE'));
