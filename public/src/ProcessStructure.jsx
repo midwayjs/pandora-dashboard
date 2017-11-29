@@ -5,7 +5,7 @@ import {PreView} from "./components/PreView";
 const { TabPane } = Tabs;
 const { TreeNode } = Tree;
 
-export class ProcessStructures extends ApplicationPage {
+export class ProcessStructure extends ApplicationPage {
 
   renderPage () {
 

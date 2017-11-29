@@ -43,15 +43,15 @@ export class ApplicationItem extends Component {
             <div style={styles.actionIcon} className="actionIcon" >
               <IconDvr size={32}/>
               <br/>
-              <span style={styles.actionIconText} >Stdout</span>
+              <span style={styles.actionIconText} >Standard Output</span>
             </div>
           </Link>
 
-          <Link to="/application/pandora-dashboard/processStructures">
+          <Link to="/application/pandora-dashboard/processStructure">
             <div style={styles.actionIcon} className="actionIcon" >
               <IconMap size={32}/>
               <br/>
-              <span style={styles.actionIconText} >Process Structures</span>
+              <span style={styles.actionIconText} >Process Structure</span>
             </div>
           </Link>
 

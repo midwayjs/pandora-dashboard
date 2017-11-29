@@ -65,8 +65,8 @@ const InstantaneousValue = () => {
 
   return (
     <Card bodyStyle={{padding: '15px 20px 17px 20px'}} style={{marginBottom: 16, borderColor: '#ddd', borderRadius: 0}} >
-      <p style={{fontSize: 26, marginBottom: 10, marginLeft: 7, lineHeight: 1.1}} >5.6</p>
-      <p><Tag color="green" >system.load.1min</Tag></p>
+      <div style={{fontSize: 26, marginBottom: 10, marginLeft: 7, lineHeight: 1.1}} >5.6</div>
+      <div><Tag color="green" >system.load.1min</Tag></div>
     </Card>
   )
 

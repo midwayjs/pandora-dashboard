@@ -60,8 +60,8 @@ export class ApplicationPage extends Component {
             <Menu.Item key="stdout">
               <Link to={`/application/${this.appName}/stdout`} >Standard Output</Link>
             </Menu.Item>
-            <Menu.Item key="processStructures">
-              <Link to={`/application/${this.appName}/processStructures`} >Process Structures</Link>
+            <Menu.Item key="processStructure">
+              <Link to={`/application/${this.appName}/processStructure`} >Process Structure</Link>
             </Menu.Item>
             <Menu.Item key="errorInspection">
               <Link to={`/application/${this.appName}/errorInspection`} >Error Inspection</Link>

@@ -1,20 +1,29 @@
 import './app.css';
-import React from 'react';
+import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
 import {LayoutCpnt} from './components/LayoutCpnt';
 import {Home} from './Home';
 import {Stdout} from './Stdout';
-import {ProcessStructures} from "./ProcessStructures";
+import {ProcessStructure} from "./ProcessStructure";
 import {ErrorInspection} from "./ErrorInspection";
 import {Metrics} from "./Metrics";
 import {Trace} from "./Trace";
 import {TraceViewer} from "./TraceViewer";
 
-const ScrollToTop = () => {
-  window.scrollTo(0, 0);
-  return null;
-};
+class ScrollToTop extends Component {
+
+  componentWillReceiveProps(nextProps) {
+    if(this.props.location.pathname === '/' || nextProps.location.pathname === '/') {
+      window.scrollTo(0, 0);
+    }
+  }
+
+  render () {
+    return null;
+  }
+
+}
 
 ReactDOM.render((
   <BrowserRouter >
@@ -22,7 +31,7 @@ ReactDOM.render((
       <Route component={ScrollToTop} />
       <Route exact path='/' component={Home} ></Route>
       <Route path='/application/:appName/:methodName(stdout)' component={Stdout} ></Route>
-      <Route path='/application/:appName/:methodName(processStructures)' component={ProcessStructures} ></Route>
+      <Route path='/application/:appName/:methodName(processStructure)' component={ProcessStructure} ></Route>
       <Route path='/application/:appName/:methodName(errorInspection)' component={ErrorInspection} ></Route>
       <Route path='/application/:appName/:methodName(metrics)' component={Metrics} ></Route>
       <Route path='/application/:appName/:methodName(trace)' component={Trace} ></Route>

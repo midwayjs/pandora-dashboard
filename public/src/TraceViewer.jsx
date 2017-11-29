@@ -140,12 +140,12 @@ export class TraceViewer extends ApplicationPage {
 
     return <div>
       <h2 style={{marginBottom: 10}} >Trace Viewer  </h2>
-      <p style={{marginBottom: 25}} >
+      <div style={{marginBottom: 25}} >
         <Tag color="108ee9" >TraceId: {this.traceId}</Tag>
         <Tag color="108ee9" >Transaction: HTTP GET /index</Tag>
         <Tag color="108ee9" >Cost: 120 seconds</Tag>
         <Tag color="108ee9" >Time: 3 minutes ago</Tag>
-        </p>
+        </div>
       <Table columns={columns} dataSource={data} pagination={false} />
     </div>;
 
