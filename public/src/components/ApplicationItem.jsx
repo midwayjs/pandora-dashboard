@@ -6,28 +6,32 @@ import IconTraffic from 'react-icons/lib/md/traffic';
 import IconHighlight from 'react-icons/lib/md/highlight';
 import IconStraighten from 'react-icons/lib/md/straighten';
 import { Link } from 'react-router-dom';
+import {stateToDisplay} from "../utils/Common";
 
 
 export class ApplicationItem extends Component {
 
   render () {
 
+    const {app} = this.props;
+    const restartCount = Math.max(0, app.startCount - 1);
+
     const title = <div style={{fontWeight: 'normal', fontSize: 12, paddingLeft: 5, paddingBottom: 15, marginBottom: 10, borderBottom: '1px solid #ddd'}} >
       <div>
-        <h4 style={{fontWeight: 'bold', fontSize: 16, display: 'inline'}} >pandora-dashboard [Started]</h4>
-        <span style={{marginLeft: 10}} >At location /home/allen/project/midway-sandbox</span>
+        <h4 style={{fontWeight: 'bold', fontSize: 16, display: 'inline'}} >{app.appName} [{stateToDisplay(app.state)}]</h4>
+        <span style={{marginLeft: 10}} >At location {app.appDir}</span>
       </div>
 
       <div style={{marginTop: 5}} >
         <p>
           <span style={styles.titleIndicator} >
-            <b>Uptime:</b> 3 days 5 hours 3 minutes
+            <b>Uptime:</b> {app.uptime} seconds
           </span>
           <span style={styles.titleIndicator} >
-            <b>PID:</b> 3333, 4444
+            <b>PID:</b> {app.pids.join(', ')}
           </span>
           <span style={styles.titleIndicator} >
-            <b>Restart Count:</b> 0 times
+            <b>Restart Count:</b> {restartCount} times
           </span>
         </p>
       </div>
@@ -39,7 +43,7 @@ export class ApplicationItem extends Component {
 
         <div>
 
-          <Link to="/application/pandora-dashboard/stdout">
+          <Link to={`/application/${app.appName}/stdout`} >
             <div style={styles.actionIcon} className="actionIcon" >
               <IconDvr size={32}/>
               <br/>
@@ -47,7 +51,7 @@ export class ApplicationItem extends Component {
             </div>
           </Link>
 
-          <Link to="/application/pandora-dashboard/processStructure">
+          <Link to={`/application/${app.appName}/processStructure`} >
             <div style={styles.actionIcon} className="actionIcon" >
               <IconMap size={32}/>
               <br/>
@@ -57,7 +61,7 @@ export class ApplicationItem extends Component {
 
           <div style={styles.actionSplitter} ></div>
 
-          <Link to="/application/pandora-dashboard/errorInspection">
+          <Link to={`/application/${app.appName}/errorInspection`} >
             <div style={styles.actionIcon} className="actionIcon" >
               <IconTraffic size={32}/>
               <br/>
@@ -65,7 +69,7 @@ export class ApplicationItem extends Component {
             </div>
           </Link>
 
-          <Link to="/application/pandora-dashboard/metrics">
+          <Link to={`/application/${app.appName}/metrics`} >
             <div style={styles.actionIcon} className="actionIcon" >
               <IconStraighten size={32}/>
               <br/>
@@ -73,7 +77,7 @@ export class ApplicationItem extends Component {
             </div>
           </Link>
 
-          <Link to="/application/pandora-dashboard/trace">
+          <Link to={`/application/${app.appName}/trace`} >
             <div style={styles.actionIcon} className="actionIcon" >
               <IconHighlight size={32}/>
               <br/>

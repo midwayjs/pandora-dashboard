@@ -2,31 +2,49 @@ import React, { Component } from 'react';
 import { Breadcrumb, Layout, Menu } from 'antd';
 const {Sider, Content} = Layout;
 import { Link } from 'react-router-dom';
+import {Actuator} from '../utils/Actuator';
+import {safe, stateToDisplay} from "../utils/Common";
 
 const noSiderMethods = [
   'traceViewer'
 ];
+
+const appsCached = {};
 
 export class ApplicationPage extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      loadingBasic: true
+      app: appsCached[this.appName] || null
     };
   }
 
-  componentDidMount () {
-    setTimeout(() => {
-      this.setState({loadingBasic: false});
-    });
+  componentDidMount() {
+    this.fetchApp().catch(alert);
   }
 
-  get appName () {
+  async fetchApp() {
+    const appList = await Actuator.get('/info', {
+      appName: this.appName
+    });
+    if(!appList.length || !appList.length) {
+      throw new Error('Can\'t get a Application it named ' + this.appName);
+    }
+    const app = appList[0];
+    appsCached[this.appName] = app;
+    this.setState({app});
+  }
+
+  get app() {
+    return this.state.app;
+  }
+
+  get appName() {
     return this.props.match.params.appName;
   }
 
-  get methodName () {
+  get methodName() {
     return this.props.match.params.methodName;
   }
 
@@ -38,15 +56,17 @@ export class ApplicationPage extends Component {
     </Breadcrumb>;
     return breadcrumb;
   }
+
   renderPage() {
     return null;
   }
+
   renderOuter() {
 
     const methodName = this.methodName;
 
     const content = <Content style={{padding: '5px 15px 15px 30px'}} >
-        {this.renderPage()}
+        {this.app ? this.renderPage() : null}
       </Content>;
 
     if(noSiderMethods.indexOf(methodName) > -1) {
@@ -79,23 +99,26 @@ export class ApplicationPage extends Component {
 
   }
   render () {
+
+    const app = this.app;
+
     return <div>
       <div style={{ margin: '16px 0' }} >
         {this.renderBreadcrumb()}
       </div>
 
       <div style={{ background: '#fff', padding: '20px 24px', paddingBottom: 25, marginBottom: 30 }}>
-          <h4 style={{fontWeight: 'bold', fontSize: 20, display: 'inline'}} >{this.appName} [Started]</h4>
-          <p style={{marginTop: 10}} >At location /home/allen/project/midway-sandbox</p>
+          <h4 style={{fontWeight: 'bold', fontSize: 20, display: 'inline'}} >{safe(() => app.appName, '-')} [{safe(() => stateToDisplay(app.state), '-')}]</h4>
+          <p style={{marginTop: 10}} >At location {safe(() => app.appDir)}</p>
           <p style={{marginTop: 10}} >
             <span style={styles.titleIndicator} >
-                <b>Uptime:</b> 3 days 5 hours 3 minutes
+                <b>Uptime:</b> {safe(() => app.uptime + ' seconds', '-')}
               </span>
             <span style={styles.titleIndicator} >
-                <b>PID:</b> 3333, 4444
+                <b>PID:</b> {safe(() => app.pids.join(', '))}
               </span>
             <span style={styles.titleIndicator} >
-                <b>Restart Count:</b> 0 times
+                <b>Restart Count:</b> {safe(() => Math.max(0, app.startCount - 1) + ' times', '-')}
               </span>
           </p>
 

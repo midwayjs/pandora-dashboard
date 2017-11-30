@@ -1,86 +1,121 @@
 import {Breadcrumb} from 'antd';
-import React, { Component } from 'react';
-import { Row, Col } from 'antd';
+import React, {Component} from 'react';
+import {Row, Col} from 'antd';
 import {ApplicationItem} from "./components/ApplicationItem";
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
+import {Actuator} from "./utils/Actuator";
+import {safe} from "./utils/Common";
 
 export class Home extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      appList: null,
+      daemonInfo: null
+    }
+  }
 
-  render () {
+  componentDidMount() {
+    this.fetchAppList().catch(alert);
+    this.fetchDaemonInfo().catch(alert);
+  }
+
+  async fetchDaemonInfo() {
+    const daemonInfo = await Actuator.get('/daemon');
+    this.setState({daemonInfo});
+  }
+
+  async fetchAppList() {
+    const appList = await Actuator.get('/info');
+    this.setState({appList});
+  }
+
+  render() {
 
     const breadcrumb = <Breadcrumb>
-        <Breadcrumb.Item><Link to="/" >Pandora.js</Link></Breadcrumb.Item>
-        <Breadcrumb.Item>Home</Breadcrumb.Item>
-      </Breadcrumb>;
+      <Breadcrumb.Item><Link to="/">Pandora.js</Link></Breadcrumb.Item>
+      <Breadcrumb.Item>Home</Breadcrumb.Item>
+    </Breadcrumb>;
 
 
-    return <div>
-      <div style={{ margin: '16px 0' }} >
-        {breadcrumb}
-      </div>
+    return (
       <div>
+        <div style={{margin: '16px 0'}}>
+          {breadcrumb}
+        </div>
+        <div>
 
-        <SimpleCube title="Pandora.js Information" >
-          <Row style={{marginTop: 10}} >
-            <Col span={10} style={styles.pandoraInfoCol} >
-              <p><b>Node.js Version:</b> 8.8.8</p>
-              <p><b>Pandora.js Version:</b> 1.0.0</p>
-              <p><b>Daemon PID:</b> 88888</p>
-              <p><b>Daemon Uptime:</b> 3 days 5 hours 3 minutes</p>
-            </Col>
-            <Col style={Object.assign({}, styles.pandoraInfoCol, {borderLeft: '1px solid #ddd', paddingLeft: 30})} span={14} >
+          <SimpleCube title="Pandora.js Information">
+            <PandoraInfo daemonInfo={this.state.daemonInfo}/>
+          </SimpleCube>
 
-              <p>
-                <b>Loaded Global Configs:</b>
-                <br/>
-                <span style={{textIndent: 10, display: 'block'}} >
-                  /home/admin/xxx.js, /dsfds.js, /sdfsdf.js
-                </span>
-              </p>
+          <SimpleCube title="Application List">
+            <AppList appList={this.state.appList}/>
+          </SimpleCube>
 
-              <p>
-                <b>Loaded Endpoints:</b>
-                <br/>
-                <span style={{textIndent: 10, display: 'block'}} >
-                  error, health
-                </span>
-              </p>
-
-              <p>
-                <b>Loaded Reporters:</b>
-                <br/>
-                <span style={{textIndent: 10, display: 'block'}} >
-                  files, open-falcon
-                </span>
-              </p>
-
-            </Col>
-          </Row>
-        </SimpleCube>
-
-        <SimpleCube title="Application List" >
-          <div >
-            <ApplicationItem/>
-            <ApplicationItem/>
-            <ApplicationItem/>
-          </div>
-        </SimpleCube>
-
+        </div>
       </div>
-    </div>;
+    );
 
 
   }
 }
 
+const AppList = (props) => {
+
+  const {appList} = props;
+
+  return <div style={{minHeight: 300}} >
+    {appList && appList.map((app) => {
+      return <ApplicationItem key={app.appName} app={app} />
+    })}
+  </div>
+
+};
+
+const PandoraInfo = (props) => {
+
+  const {daemonInfo} = props;
+
+  return <Row style={{marginTop: 10}}>
+    <Col span={10} style={styles.pandoraInfoCol}>
+      <p><b>Node.js Version:</b> {safe(() => daemonInfo.versions.node, '-')}</p>
+      <p><b>Pandora.js Version:</b> {safe(() => daemonInfo.versions.pandora, '-')}</p>
+      <p><b>Daemon PID:</b> {safe(() => daemonInfo.pid, '-')}</p>
+      <p><b>Daemon Uptime:</b> {safe(() => daemonInfo.uptime + ' seconds', '-')}</p>
+      <p><b>Daemon WorkDir:</b> {safe(() => daemonInfo.cwd , '-')}</p>
+    </Col>
+    <Col style={Object.assign({}, styles.pandoraInfoCol, {borderLeft: '1px solid #ddd', paddingLeft: 30})} span={14}>
+
+      <p>
+        <b>Loaded Global Configs:</b>
+        <br/>
+        <span style={{textIndent: 10, display: 'block'}}>{safe(() => daemonInfo.loadedGlobalConfigPaths.join(', ') , '-')}</span>
+      </p>
+
+      <p>
+        <b>Loaded Endpoints:</b>
+        <br/>
+        <span style={{textIndent: 10, display: 'block'}}>{safe(() => daemonInfo.loadedEndPoints.join(', ') , '-')}</span>
+      </p>
+
+      <p>
+        <b>Loaded Reporters:</b>
+        <br/>
+        <span style={{textIndent: 10, display: 'block'}}>{safe(() => daemonInfo.loadedReporters.join(', ') , '-')}</span>
+      </p>
+
+    </Col>
+  </Row>;
+};
+
 
 const SimpleCube = (props) => {
   return <div style={{background: '#fff', padding: 24, minHeight: 200, marginBottom: 30, paddingBottom: 30}}>
-    <h2 style={styles.title} >{props.title}</h2>
+    <h2 style={styles.title}>{props.title}</h2>
     {props.children}
   </div>
-
 };
 
 const styles = {

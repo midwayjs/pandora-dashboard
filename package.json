@@ -22,18 +22,22 @@
   },
   "homepage": "https://github.com/midwayjs/pandora-dashboard#readme",
   "dependencies": {
+    "@types/mz": "0.0.32",
     "koa": "^2.4.1",
     "koa-error": "^3.1.0",
     "koa-mount": "^3.0.0",
     "koa-onerror": "^4.0.0",
     "koa-router": "^7.3.0",
-    "koa-static": "^4.0.2"
+    "koa-static": "^4.0.2",
+    "mz": "^2.7.0",
+    "urllib": "^2.25.1"
   },
   "devDependencies": {
     "@types/koa": "^2.0.41",
     "@types/koa-router": "^7.0.26",
     "@types/node": "^8.0.53",
     "antd": "^2.13.10",
+    "axios": "^0.17.1",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.2",
     "babel-loader": "^7.1.2",
@@ -48,6 +52,7 @@
     "react-icons": "^2.2.7",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
+    "regenerator-runtime": "^0.11.0",
     "style-loader": "^0.19.0",
     "ts-node": "^3.3.0",
     "tslint": "^4.5.1",
