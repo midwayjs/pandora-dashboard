@@ -1,7 +1,7 @@
 import React from 'react';
 import {Actuator} from './utils/Actuator';
 import {ApplicationPage} from "./components/ApplicationPage";
-import {Table, Tag} from 'antd';
+import {Table, Tag, Tooltip} from 'antd';
 import {SpanCostIndicator} from "./components/SpanCostIndicator";
 import {displayDuration, displayValue} from "./utils/Common";
 import moment from "moment";
@@ -41,7 +41,7 @@ export class TraceViewer extends ApplicationPage {
         title: 'Span ID',
         dataIndex: 'context.spanId',
         key: 'spanId',
-        width: '15%'
+        width: '20%'
       },
       {
         title: 'Operation Name',
@@ -57,16 +57,29 @@ export class TraceViewer extends ApplicationPage {
         title: 'Tags',
         dataIndex: 'tags',
         key: 'tags',
-        width: '20%',
+        width: '35%',
         render: (tags) => {
           const tagKeys = Object.keys(tags);
           if(!tags || !tagKeys.length) {
             return null;
           }
-          return tagKeys.map((key, idx) => {
+          const eleTags = tagKeys.map((key, idx) => {
             const value = tags[key].value;
-            return <Tag style={{marginBottom: 6}} key={idx} >{key}: {displayValue(value)}</Tag>
+            const text = `${key}: ${displayValue(value)}`;
+            const eleTag = <Tag title={text} style={{
+              marginBottom: 6, whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis', overflow: 'hidden',
+              maxWidth: '49%'
+            }} >{text}</Tag>;
+            return <Tooltip key={idx} placement={'top'} trigger={'hover'} title={text} onClick={() => {
+              prompt('Tag: ' + key, displayValue(value));
+            }} >
+              {eleTag}
+            </Tooltip>;
           });
+          return <div style={{maxHeight: 60, overflow: 'auto', overflowX: 'hidden', maxWidth: 'calc(100vw/3)'}} >
+            {eleTags}
+          </div>;
         }
       },
       {
@@ -81,7 +94,7 @@ export class TraceViewer extends ApplicationPage {
         title: 'Timeline',
         key: 'timeline',
         render: (_, record) => {
-          return <SpanCostIndicator style={{marginRight: 10}} start={record.dimestamp - trace.dimestamp} duration={record.duration} total={trace.duration}  />
+          return <SpanCostIndicator style={{marginRight: 10}} start={record.timestamp - trace.timestamp} duration={record.duration} total={trace.duration}  />
         }
       }
     ];
@@ -90,15 +103,15 @@ export class TraceViewer extends ApplicationPage {
     const tree = [attachChildren(trace.spans[0], trace.spans)];
 
     return <div>
-      <h2 style={{marginBottom: 10}} >Trace Viewer</h2>
-      <div style={{marginBottom: 25}} >
-        <Tag color="108ee9" >TraceId: {this.traceId}</Tag>
-        <Tag color="108ee9" >Transaction: {trace.name}</Tag>
-        <Tag color="108ee9" >PID: {trace.pid}</Tag>
-        <Tag color="108ee9" >Duration: {displayDuration(trace.duration)}</Tag>
-        <Tag color="108ee9" >Time: {moment(trace.timestamp).format('L LTS')}</Tag>
+      <h2 style={{marginBottom: 14}} >Trace Viewer</h2>
+      <div style={{marginBottom: 18}} >
+        <Tag style={styles.majorTag} color="108ee9" >TraceId: {this.traceId}</Tag>
+        <Tag style={styles.majorTag} color="108ee9" >Transaction: {trace.name}</Tag>
+        <Tag style={styles.majorTag} color="108ee9" >PID: {trace.pid}</Tag>
+        <Tag style={styles.majorTag} color="108ee9" >Duration: {displayDuration(trace.duration)}</Tag>
+        <Tag style={styles.majorTag} color="108ee9" >Time: {moment(trace.timestamp).format('L LTS')}</Tag>
         </div>
-      <Table rowKey="rowKey" columns={columns} dataSource={tree} pagination={false} />
+      <Table rowKey="rowKey" indentSize={10} columns={columns} dataSource={tree} pagination={false} />
     </div>;
 
   }
@@ -120,3 +133,9 @@ function attachChildren (lead, spans) {
   }
   return lead;
 }
+
+const styles = {
+  majorTag: {
+    marginBottom: 6
+  }
+};

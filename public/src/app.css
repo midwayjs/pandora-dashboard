@@ -21,3 +21,9 @@ body {
 body .ant-tabs-nav-wrap {
     height: 42px;
 }
+
+body .ant-tooltip-inner {
+    white-space: normal;
+    word-break: break-all;
+    max-width: 350px;
+}
