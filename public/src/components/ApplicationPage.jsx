@@ -3,7 +3,7 @@ import { Breadcrumb, Layout, Menu } from 'antd';
 const {Sider, Content} = Layout;
 import { Link } from 'react-router-dom';
 import {Actuator} from '../utils/Actuator';
-import {safe, stateToDisplay} from "../utils/Common";
+import {displayDuration, safe, stateToDisplay} from "../utils/Common";
 
 const noSiderMethods = [
   'traceViewer'
@@ -112,13 +112,13 @@ export class ApplicationPage extends Component {
           <p style={{marginTop: 10}} >At location {safe(() => app.appDir)}</p>
           <p style={{marginTop: 10}} >
             <span style={styles.titleIndicator} >
-                <b>Uptime:</b> {safe(() => app.uptime + ' seconds', '-')}
+                <b>Uptime:</b> {safe(() => displayDuration(app.uptime * 1000), '-')}
               </span>
             <span style={styles.titleIndicator} >
                 <b>PID:</b> {safe(() => app.pids.join(', '))}
               </span>
             <span style={styles.titleIndicator} >
-                <b>Restart Count:</b> {safe(() => Math.max(0, app.startCount - 1) + ' times', '-')}
+                <b>Restart Count:</b> {safe(() => Math.max(0, app.startCount - 1), '-')}
               </span>
           </p>
 

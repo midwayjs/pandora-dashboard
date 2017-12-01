@@ -3,34 +3,43 @@ import {Actuator} from './utils/Actuator';
 import {ApplicationPage} from "./components/ApplicationPage";
 import {Table, Pagination} from 'antd';
 import {Link} from "react-router-dom";
+import moment from "moment";
+import {displayDuration} from "./utils/Common";
+
+const PAGE_SIZE = 20;
+
 export class Trace extends ApplicationPage {
 
   constructor(props) {
     super(props);
-    this.state.traces = null;
+    this.state.items = null;
+    this.state.count = null;
+    this.state.pageNumber = null;
   }
 
   componentDidMount() {
     super.componentDidMount();
-    this.fetchTrace().catch(alert);
+    this.fetchTrace(1).catch(alert);
   }
 
-  async fetchTrace() {
-    const traces = await Actuator.get('/trace', {
-      appName: this.appName
+  async fetchTrace(pageNumber) {
+    const {count, items} = await Actuator.get('/trace', {
+      appName: this.appName,
+      by: 'time',
+      order: 'DESC',
+      offset: (pageNumber - 1) * PAGE_SIZE,
+      limit: PAGE_SIZE
     });
-    this.setState({traces});
+    this.setState({count, items, pageNumber});
   }
 
   renderPage () {
 
-    const traces = this.state.traces;
+    const {count, items, pageNumber} = this.state;
 
-    if(!traces) {
+    if(!items) {
       return null;
     }
-
-    console.log(traces);
 
     const columns = [
       {
@@ -44,17 +53,23 @@ export class Trace extends ApplicationPage {
         key: 'name'
       },
       {
+        title: 'PID',
+        dataIndex: 'pid',
+        key: 'pid'
+      },
+      {
         title: 'Duration',
         dataIndex: 'duration',
         key: 'duration',
-        render(text) {
-          return `${text} seconds`;
-        }
+        render: displayDuration
       },
       {
         title: 'Time',
-        dataIndex: 'date',
-        key: 'date'
+        dataIndex: 'timestamp',
+        key: 'timestamp',
+        render(ts) {
+          return moment(ts).format('L LTS');
+        }
       },
       {
         title: 'Action',
@@ -67,9 +82,11 @@ export class Trace extends ApplicationPage {
 
     return <div>
       <h3 style={{marginBottom: 20}} >Recent 1000 Traces</h3>
-        <Table columns={columns} dataSource={traces} pagination={false} />
+        <Table rowKey="traceId" columns={columns} dataSource={items} pagination={false} />
       <div style={{marginTop: 30, textAlign: 'center'}} >
-        <Pagination defaultCurrent={1} total={500} />
+        <Pagination total={count} pageSize={PAGE_SIZE} current={pageNumber} onChange={(pageNumber) => {
+          this.fetchTrace(pageNumber).catch(alert);
+        }}/>
       </div>
     </div>;
 

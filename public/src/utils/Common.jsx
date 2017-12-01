@@ -1,4 +1,5 @@
 import {State} from "../consts";
+import Duration from "duration";
 
 export function stateToDisplay (state) {
   state = State[state];
@@ -66,4 +67,16 @@ export function ascendDimension(arr, n) {
 
   return ret;
 
+}
+export function displayDuration(ms) {
+  if(ms == null) {
+    return null;
+  }
+  const duration = new Duration(new Date(0), new Date(ms));
+  return duration.toString(1);
+}
+
+export function displayValue(value) {
+  return typeof value === 'string' || typeof value === 'number'
+    ? value : JSON.stringify(value);
 }

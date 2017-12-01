@@ -3,7 +3,7 @@ import {Actuator} from './utils/Actuator';
 import {ApplicationPage} from "./components/ApplicationPage";
 import {Tabs, Tree, Tag} from 'antd';
 import {PreView} from "./components/PreView";
-import {makeProcessTree} from "./utils/Common";
+import {displayDuration, makeProcessTree} from "./utils/Common";
 const { TabPane } = Tabs;
 const { TreeNode } = Tree;
 
@@ -65,7 +65,7 @@ const subTreeWithoutLead = (props) => {
   return children.map((process) => {
     const span = <span style={{whiteSpace: 'normal', display: 'block', paddingRight: 20}} >
       <Tag style={{float: 'left', marginTop: -2}} >PID: {process.pid}</Tag>
-      Process Name: {process.processName} / Uptime: {process.uptime} seconds / CPU Usage: {process.cpu}% / Memory: {(process.memory / 1024 / 1014).toFixed(2)}MB</span>;
+      Process Name: {process.processName} / Uptime: {displayDuration(process.uptime * 1000)} / CPU Usage: {process.cpu}% / Memory: {(process.memory / 1024 / 1014).toFixed(2)}MB</span>;
 
     return <TreeNode title={span} key={process.pid} >
       {subTreeWithoutLead({process})}

@@ -2,7 +2,7 @@ import React from 'react';
 import {Actuator} from './utils/Actuator';
 import {ApplicationPage} from "./components/ApplicationPage";
 import {Card, Row, Col, Tag} from 'antd';
-import {ascendDimension} from "./utils/Common";
+import {ascendDimension, displayValue} from "./utils/Common";
 
 export class Metrics extends ApplicationPage {
 
@@ -97,7 +97,3 @@ const InstantaneousValue = (props) => {
 };
 
 
-function displayValue(value) {
-  return typeof value === 'string' || typeof value === 'number'
-    ? value : JSON.stringify(value);
-}

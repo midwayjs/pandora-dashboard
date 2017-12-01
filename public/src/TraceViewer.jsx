@@ -1,154 +1,122 @@
 import React from 'react';
+import {Actuator} from './utils/Actuator';
 import {ApplicationPage} from "./components/ApplicationPage";
 import {Table, Tag} from 'antd';
 import {SpanCostIndicator} from "./components/SpanCostIndicator";
-
-const timelineWitdh = 400;
+import {displayDuration, displayValue} from "./utils/Common";
+import moment from "moment";
 
 export class TraceViewer extends ApplicationPage {
+
+  constructor(props) {
+    super(props);
+    this.state.trace = null;
+  }
 
   get traceId () {
     return this.props.match.params.traceId;
   }
 
+  componentDidMount() {
+    super.componentDidMount();
+    this.fetchTrace().catch(alert);
+  }
+
+  async fetchTrace() {
+    const trace = await Actuator.get('/trace/' + this.traceId, {
+      appName: this.appName
+    });
+    this.setState({trace});
+  }
+
   renderPage () {
+
+    const {trace} = this.state;
+    if(!trace) {
+      return null;
+    }
 
     const columns = [
       {
         title: 'Span ID',
-        dataIndex: 'spanId',
-        key: 'spanId'
+        dataIndex: 'context.spanId',
+        key: 'spanId',
+        width: '15%'
       },
       {
         title: 'Operation Name',
-        dataIndex: 'operationName',
-        key: 'operationName',
+        dataIndex: 'name',
+        key: 'name',
+        width: '10%',
         render: (text) => {
           return <Tag color="green" >{text}</Tag>
 
         }
       },
       {
-        title: 'Duration',
-        dataIndex: 'duration',
-        key: 'duration'
-      },
-      {
         title: 'Tags',
         dataIndex: 'tags',
         key: 'tags',
+        width: '20%',
         render: (tags) => {
-
-          if(!tags || !tags.length) {
+          const tagKeys = Object.keys(tags);
+          if(!tags || !tagKeys.length) {
             return null;
           }
-
-          return tags.map((tag, idx) => {
-
-            return <Tag key={idx} >{tag.key}: {tag.value}</Tag>
-
+          return tagKeys.map((key, idx) => {
+            const value = tags[key].value;
+            return <Tag style={{marginBottom: 6}} key={idx} >{key}: {displayValue(value)}</Tag>
           });
-
         }
       },
       {
-        width: timelineWitdh,
+        title: 'Duration',
+        dataIndex: 'duration',
+        key: 'duration',
+        width: '10%',
+        render: displayDuration
+      },
+      {
+        width: 'auto',
         title: 'Timeline',
         key: 'timeline',
-        render: (_, recoard) => {
-          return <SpanCostIndicator style={{width: timelineWitdh - 30}} start={recoard.startTime} duration={recoard.duration} total={3000}  />
+        render: (_, record) => {
+          return <SpanCostIndicator style={{marginRight: 10}} start={record.dimestamp - trace.dimestamp} duration={record.duration} total={trace.duration}  />
         }
       }
     ];
 
 
-
-    const cell = {
-      spanId: 'nope-nope-nope',
-      operationName: 'HTTP GET',
-      startTime: 55,
-      duration: 1200,
-      tags: [
-        { key: 'tag1', value: 'value1' },
-        { key: 'tag1', value: 'value1' },
-        { key: 'tag1', value: 'value1' },
-      ]
-    };
-
-    let y = 0;
-
-    const data = [
-      Object.assign({}, cell, {
-        key: y++,
-        children: [
-          Object.assign({}, cell, {
-            key: y++,
-            children: [
-              Object.assign({}, cell, {key: y++}),
-              Object.assign({}, cell, {key: y++}),
-              Object.assign({}, cell, {key: y++}),
-            ]
-          }),
-          Object.assign({}, cell, {
-            key: y++,
-          }),
-          Object.assign({}, cell, {
-            key: y++,
-          }),
-        ]
-      }),
-      Object.assign({}, cell, {
-        key: y++,
-        children: [
-          Object.assign({}, cell, {
-            key: y++,
-            children: [
-              Object.assign({}, cell, {key: y++}),
-              Object.assign({}, cell, {key: y++}),
-              Object.assign({}, cell, {key: y++}),
-            ]
-          }),
-          Object.assign({}, cell, {
-            key: y++,
-          }),
-          Object.assign({}, cell, {
-            key: y++,
-          }),
-        ]
-      }),
-      Object.assign({}, cell, {
-        key: y++,
-        children: [
-          Object.assign({}, cell, {
-            key: y++,
-            children: [
-              Object.assign({}, cell, {key: y++}),
-              Object.assign({}, cell, {key: y++}),
-              Object.assign({}, cell, {key: y++}),
-            ]
-          }),
-          Object.assign({}, cell, {
-            key: y++,
-          }),
-          Object.assign({}, cell, {
-            key: y++,
-          }),
-        ]
-      }),
-    ];
-
+    const tree = [attachChildren(trace.spans[0], trace.spans)];
 
     return <div>
-      <h2 style={{marginBottom: 10}} >Trace Viewer  </h2>
+      <h2 style={{marginBottom: 10}} >Trace Viewer</h2>
       <div style={{marginBottom: 25}} >
         <Tag color="108ee9" >TraceId: {this.traceId}</Tag>
-        <Tag color="108ee9" >Transaction: HTTP GET /index</Tag>
-        <Tag color="108ee9" >Cost: 120 seconds</Tag>
-        <Tag color="108ee9" >Time: 3 minutes ago</Tag>
+        <Tag color="108ee9" >Transaction: {trace.name}</Tag>
+        <Tag color="108ee9" >PID: {trace.pid}</Tag>
+        <Tag color="108ee9" >Duration: {displayDuration(trace.duration)}</Tag>
+        <Tag color="108ee9" >Time: {moment(trace.timestamp).format('L LTS')}</Tag>
         </div>
-      <Table columns={columns} dataSource={data} pagination={false} />
+      <Table rowKey="rowKey" columns={columns} dataSource={tree} pagination={false} />
     </div>;
 
   }
 
+}
+
+function attachChildren (lead, spans) {
+  const spanId = lead.context.spanId;
+  const children = [];
+  lead.rowKey = spanId;
+  for(const span of spans) {
+    if(span.context.parentId && span.context.parentId === spanId) {
+      attachChildren(span, spans);
+      children.push(span);
+    }
+  }
+  if(children.length) {
+    lead.children = children;
+  }
+  return lead;
 }

@@ -6,7 +6,7 @@ import IconTraffic from 'react-icons/lib/md/traffic';
 import IconHighlight from 'react-icons/lib/md/highlight';
 import IconStraighten from 'react-icons/lib/md/straighten';
 import { Link } from 'react-router-dom';
-import {stateToDisplay} from "../utils/Common";
+import {displayDuration, stateToDisplay} from "../utils/Common";
 
 
 export class ApplicationItem extends Component {
@@ -25,13 +25,13 @@ export class ApplicationItem extends Component {
       <div style={{marginTop: 5}} >
         <p>
           <span style={styles.titleIndicator} >
-            <b>Uptime:</b> {app.uptime} seconds
+            <b>Uptime:</b> {displayDuration(app.uptime * 1000)}
           </span>
           <span style={styles.titleIndicator} >
             <b>PID:</b> {app.pids.join(', ')}
           </span>
           <span style={styles.titleIndicator} >
-            <b>Restart Count:</b> {restartCount} times
+            <b>Restart Count:</b> {restartCount}
           </span>
         </p>
       </div>
