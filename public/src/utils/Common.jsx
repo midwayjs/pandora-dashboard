@@ -48,3 +48,22 @@ function findByCertainKey (processes, key, eq) {
   }
   return ret;
 }
+
+export function ascendDimension(arr, n) {
+
+  if(!arr.length) {
+    return [];
+  }
+
+  const ret = [[]];
+
+  for(const x of arr) {
+    if(ret[ret.length - 1].length >= n) {
+      ret.push([]);
+    }
+    ret[ret.length - 1].push(x);
+  }
+
+  return ret;
+
+}

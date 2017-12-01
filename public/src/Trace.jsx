@@ -1,70 +1,73 @@
 import React from 'react';
+import {Actuator} from './utils/Actuator';
 import {ApplicationPage} from "./components/ApplicationPage";
 import {Table, Pagination} from 'antd';
 import {Link} from "react-router-dom";
 export class Trace extends ApplicationPage {
 
+  constructor(props) {
+    super(props);
+    this.state.traces = null;
+  }
+
+  componentDidMount() {
+    super.componentDidMount();
+    this.fetchTrace().catch(alert);
+  }
+
+  async fetchTrace() {
+    const traces = await Actuator.get('/trace', {
+      appName: this.appName
+    });
+    this.setState({traces});
+  }
+
   renderPage () {
+
+    const traces = this.state.traces;
+
+    if(!traces) {
+      return null;
+    }
+
+    console.log(traces);
 
     const columns = [
       {
         title: 'Trace ID',
-        dataIndex: 'id',
-        key: 'id'
+        dataIndex: 'traceId',
+        key: 'traceId'
       },
       {
         title: 'Transaction',
-        dataIndex: 'transaction',
-        key: 'transaction'
+        dataIndex: 'name',
+        key: 'name'
       },
       {
-        title: 'Cost',
-        dataIndex: 'cost',
-        key: 'cost'
+        title: 'Duration',
+        dataIndex: 'duration',
+        key: 'duration',
+        render(text) {
+          return `${text} seconds`;
+        }
       },
       {
         title: 'Time',
-        dataIndex: 'time',
-        key: 'time'
+        dataIndex: 'date',
+        key: 'date'
       },
       {
         title: 'Action',
         key: 'action',
         render: (text, record) => {
-          return <Link to={`/application/${this.appName}/traceViewer/${record.id}`} target="_blank" >Take a look</Link>
+          return <Link to={`/application/${this.appName}/traceViewer/${record.traceId}`} target="_blank" >Take a look</Link>
         }
       }
     ];
 
-    const cell = {
-      id: 'nope-nope-nope',
-      time: '3 minutes ago',
-      cost: '120 seconds',
-      transaction: 'HTTP GET /index'
-    };
-
-    const data = [
-      cell,
-      cell,
-      cell,
-      cell,
-      cell,
-      cell,
-      cell,
-      cell,
-      cell,
-      cell,
-      cell,
-      cell,
-      cell,
-      cell,
-      cell,
-      cell,
-    ];
-
     return <div>
       <h3 style={{marginBottom: 20}} >Recent 1000 Traces</h3>
-        <Table columns={columns} dataSource={data} pagination={false} />
+        <Table columns={columns} dataSource={traces} pagination={false} />
       <div style={{marginTop: 30, textAlign: 'center'}} >
         <Pagination defaultCurrent={1} total={500} />
       </div>

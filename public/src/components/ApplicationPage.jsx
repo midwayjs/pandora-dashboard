@@ -25,13 +25,13 @@ export class ApplicationPage extends Component {
   }
 
   async fetchApp() {
-    const appList = await Actuator.get('/info', {
+    const infoRes = await Actuator.get('/info', {
       appName: this.appName
     });
-    if(!appList.length || !appList.length) {
-      throw new Error('Can\'t get a Application it named ' + this.appName);
+    if(!infoRes || !infoRes.length) {
+      throw new Error('Can\'t get an Application it named ' + this.appName);
     }
-    const app = appList[0];
+    const app = infoRes[0].data;
     appsCached[this.appName] = app;
     this.setState({app});
   }

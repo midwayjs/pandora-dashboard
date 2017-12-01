@@ -27,8 +27,23 @@ export class Home extends Component {
   }
 
   async fetchAppList() {
-    const appList = await Actuator.get('/info');
-    this.setState({appList});
+    const infoRes = await Actuator.get('/info');
+    const appList = [];
+
+    for(const appName of Object.keys(infoRes)) {
+      const record = infoRes[appName];
+      const endPoint = {};
+      record[0].data.endPoint = endPoint;
+      for(const item of record) {
+        endPoint[item.key] = item.data;
+      }
+      appList.push(record[0].data);
+    }
+    const appList2nd = appList.sort((a, b) => {
+      return a.uptime - b.uptime;
+    });
+
+    this.setState({appList: appList2nd});
   }
 
   render() {

@@ -20,7 +20,6 @@ export class ProcessStructure extends ApplicationPage {
   }
 
   async fetchProcess () {
-
     const processes = await Actuator.get('/process', {
       appName: this.appName
     });
