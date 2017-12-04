@@ -37,7 +37,10 @@ export class ProcessStructure extends ApplicationPage {
           {processes ? <ProcessTree appName={this.appName} processes={processes} /> : null}
         </TabPane>
         <TabPane tab="Static Representation" key="2">
-          <PreView defaultContent={JSON.stringify(this.app.complex, null, 2)} style={{minHeight: '60vh'}} />
+          <PreView logs={[{
+              key: -1,
+              content: JSON.stringify(this.app.complex, null, 2)
+            }]} style={{minHeight: '60vh'}} />
         </TabPane>
       </Tabs>
     </div>

@@ -37,7 +37,7 @@ const styles = {
   },
   pre: {
     lineHeight: 2,
-    fontSize: 14,
+    fontSize: 12,
     padding: '12px 15px',
     color: '#fff',
     whiteSpace: 'pre-wrap'
