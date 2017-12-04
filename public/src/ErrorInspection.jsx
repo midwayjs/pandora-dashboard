@@ -1,39 +1,78 @@
 import React from 'react';
+import {Actuator} from './utils/Actuator';
 import {ApplicationPage} from "./components/ApplicationPage";
-import {Card, Tag, Pagination} from 'antd';
+import {Card, Tag} from 'antd';
+import moment from "moment";
 
 export class ErrorInspection extends ApplicationPage {
 
+
+  constructor(props) {
+    super(props);
+    this.state.errors = null;
+  }
+
+  componentDidMount() {
+    super.componentDidMount();
+    this.getErrors().catch(alert);
+  }
+
+  async getErrors() {
+    const res = await Actuator.get('/error', {
+      appName: this.appName,
+      by: 'time',
+      order: 'DESC',
+    });
+    this.setState({ errors: res });
+  }
+
   renderPage () {
+
+    const {errors} = this.state;
+    if(!errors) {
+      return null;
+    }
+
     return <div>
-      <h3 style={{marginBottom: 20}} >Recent 1000 Errors</h3>
-      <SingleMsg/>
-      <SingleMsg/>
-      <SingleMsg/>
-      <SingleMsg/>
-      <SingleMsg/>
-      <SingleMsg/>
-      <SingleMsg/>
-      <SingleMsg/>
-      <SingleMsg/>
-      <div style={{marginTop: 30, textAlign: 'center'}} >
-        <Pagination defaultCurrent={1} total={500} />
-      </div>
+      <h3 style={{marginBottom: 20}} >Recent Errors</h3>
+      {
+        errors.map((error, idx) => {
+          return <SingleMsg error={error} key={idx} />
+        })
+      }
+      {/*<div style={{marginTop: 30, textAlign: 'center'}} >*/}
+        {/*<Pagination defaultCurrent={1} total={500} />*/}
+      {/*</div>*/}
     </div>
   }
 
 }
 
-const SingleMsg = () => {
+const SingleMsg = (props) => {
+  const {error} = props;
 
   const title = <div style={{fontSize: 12, marginBottom: 10}} >
-    <Tag color="pink">Error</Tag> November 28th 2017, 7:27:47 pm
+    <Tag color="pink">{error.errType}</Tag>
+    &nbsp;
+    <b>Time:</b> {moment(error.timestamp).format('L LTS')}
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <b>PID:</b> {error.pid}
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <b>Path:</b> {error.path}
   </div>;
 
   return (
     <Card bodyStyle={{padding: '15px 20px'}} style={{marginBottom: 15, borderColor: '#ddd', borderRadius: 0}} >
       {title}
-      <p><b style={{marginRight: 10}} >Error Message: </b><span>{'react-lazy-load@3.0.12 requires a peer of react-dom@^0.14.0 || ^15.0.0-0 but none was installed.'}</span></p>
+      <div><b style={{marginRight: 5}} >Error Message: </b><span>{error.message}</span></div>
+      {error.stack ? (
+        <div style={{overflow: 'hidden', lineHeight: 1.5, marginTop: 5}} >
+          <b style={{marginRight: 5, float: 'left'}} >Stack: </b>
+          <div style={{ float: 'left', whiteSpace: 'pre-wrap' }} >
+            {error.stack}
+          </div>
+        </div>
+      ) : null}
     </Card>
   )
 };
