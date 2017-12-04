@@ -16,10 +16,10 @@ export abstract class WebServer extends Koa {
     super();
     this.pandoraContext = pandoraContext;
     this.router = new Router;
+    this.server = createServer(this.callback());
     this.setup();
     this.use(this.router.routes());
     this.use(this.router.allowedMethods());
-    this.server = createServer(this.callback());
   }
 
   setup() {

@@ -13,6 +13,10 @@ export class Actuator {
 
   async get(ctx) {
     const url: string = /^\/actuator(.*)/.exec(ctx.request.url)[1];
+    ctx.body = await Actuator.get(url);
+  }
+
+  static async get(url) {
     const remoteUrl = 'http://127.0.0.1:7002' + url;
     const res = await urllib.request(remoteUrl, {
       timeout: 5000,
@@ -21,7 +25,7 @@ export class Actuator {
     if(/^\/process/.test(url) && res.data.success && res.data.data) {
       await attachPPID(res.data.data);
     }
-    ctx.body = res.data;
+    return res.data;
   }
 
 }

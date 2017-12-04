@@ -2,11 +2,12 @@ import {WebServer} from './WebServer';
 import {Home} from './impl/Home';
 import {Static} from './impl/Static';
 import {Actuator} from './impl/Actuator';
+import {Stdout} from './impl/Stdout';
 
 export default class Dashboard extends WebServer {
 
   getRoutes() {
-    return [ Actuator, Static, Home ];
+    return [ Stdout, Actuator, Static, Home ];
   }
 
   getPort() {
