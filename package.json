@@ -7,9 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run lint && tsc && npm run build-public",
     "lint": "tslint --format prose -c tslint.json 'src/**/*.ts' 'test/**/*.ts' && npm run lint-public",
-    "build-public": "webpack",
+    "build-public": "webpack -p --optimize-minimize",
     "watch-public": "webpack -w",
-    "lint-public": "eslint -c public/.eslintrc 'public/src/**/*.jsx'"
+    "lint-public": "eslint -c public/.eslintrc 'public/src/**/*.jsx'",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
