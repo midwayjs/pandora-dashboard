@@ -8,7 +8,7 @@
     "build": "npm run lint && tsc && npm run build-public",
     "lint": "tslint --format prose -c tslint.json 'src/**/*.ts' 'test/**/*.ts' && npm run lint-public",
     "build-public": "webpack -p --optimize-minimize",
-    "watch-public": "webpack -w",
+    "dev-public": "webpack-dev-server",
     "lint-public": "eslint -c public/.eslintrc 'public/src/**/*.jsx'",
     "prepublish": "npm run build"
   },
@@ -48,6 +48,7 @@
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
+    "compression-webpack-plugin": "^1.0.1",
     "css-loader": "^0.28.7",
     "duration": "^0.2.0",
     "eslint": "^4.12.0",
@@ -65,6 +66,7 @@
     "ts-node": "^3.3.0",
     "tslint": "^4.5.1",
     "typescript": "^2.6.1",
-    "webpack": "^3.8.1"
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.5"
   }
 }

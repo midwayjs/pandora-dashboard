@@ -10,6 +10,9 @@ export class Home {
   }
 
   async get(ctx) {
+
+    const publicBaseURL = process.env.DASHBOARD_PUBLIC_BASE_URL || '/public';
+
     ctx.set('Content-Type', 'text/html');
     ctx.body = `
       <html>
@@ -18,7 +21,7 @@ export class Home {
         </head>
         <body>
             <div id="DUMP_APP_HERE" ></div>
-            <script src="/public/bundle.js" ></script>
+            <script src="${publicBaseURL}/bundle.js" ></script>
         </body>
       </htmljw>
     `;

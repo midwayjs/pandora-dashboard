@@ -3,7 +3,6 @@ import mount = require('koa-mount');
 import serve = require('koa-static');
 import {join} from 'path';
 
-
 export class Static {
 
   app: Dashboard;
@@ -12,7 +11,12 @@ export class Static {
   }
 
   setup() {
-    this.app.use(mount('/public', serve(join(__dirname, '../../public/build'))));
+    this.app.use(mount('/public', serve(
+      join(__dirname, '../../public/build'),
+      {
+        gzip: true
+      }
+    )));
   }
 
 }
