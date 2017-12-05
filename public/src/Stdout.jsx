@@ -1,7 +1,7 @@
 import React from 'react';
 import {ApplicationPage} from "./components/ApplicationPage";
 import {PreView} from "./components/PreView";
-import debounce from 'lodash.debounce';
+import throttle from 'lodash.throttle';
 
 const BUFFER_SIZE = 1000;
 
@@ -14,7 +14,7 @@ export class Stdout extends ApplicationPage {
     this.state.logs = [];
     this.state.loading = true;
     this.logs = [];
-    this.syncState = debounce(() => {
+    this.syncState = throttle(() => {
       if(this.state.loading === true) {
         this.setState({ loading: false });
       }
