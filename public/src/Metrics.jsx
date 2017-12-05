@@ -9,11 +9,23 @@ export class Metrics extends ApplicationPage {
   constructor (props) {
     super(props);
     this.state.displayList = null;
+    this.interval = null;
   }
 
   componentDidMount() {
     super.componentDidMount();
-    this.fetchMetrics().catch(alert);
+    this.fetchMetrics().then(() => {
+      this.interval = setInterval(() => {
+        this.fetchMetrics().catch(console.error);
+      }, 10 * 1000)
+    }).catch(alert);
+  }
+
+  componentWillUnmount() {
+    if(this.interval) {
+      clearInterval(this.interval);
+      this.interval = null;
+    }
   }
 
   async fetchMetrics() {

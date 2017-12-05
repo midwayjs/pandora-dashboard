@@ -7,6 +7,6 @@
   "rules": {
     "react/prop-types": false,
     "react/display-name": false,
-    "no-console": "warn"
+    "no-console": ["warn", { "allow": ["warn", "error"] }]
   }
 }
