@@ -36,6 +36,12 @@
     "tail": "^1.2.3",
     "urllib": "^2.25.1"
   },
+  "files": [
+    "dist",
+    "public/build",
+    "procfile.js",
+    "index.js"
+  ],
   "devDependencies": {
     "@types/koa": "^2.0.41",
     "@types/koa-router": "^7.0.26",
