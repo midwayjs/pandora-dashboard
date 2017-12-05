@@ -1,48 +1,55 @@
 import React from 'react';
 import {Actuator} from './utils/Actuator';
 import {ApplicationPage} from "./components/ApplicationPage";
-import {Card, Tag} from 'antd';
+import {Card, Tag, Pagination} from 'antd';
 import moment from "moment";
+
+const PAGE_SIZE = 20;
 
 export class ErrorInspection extends ApplicationPage {
 
-
   constructor(props) {
     super(props);
-    this.state.errors = null;
+    this.state.items = null;
+    this.state.count = null;
+    this.state.pageNumber = null;
   }
 
   componentDidMount() {
     super.componentDidMount();
-    this.getErrors().catch(alert);
+    this.fetchError(1).catch(alert);
   }
 
-  async getErrors() {
-    const res = await Actuator.get('/error', {
+  async fetchError(pageNumber) {
+    const {count, items} = await Actuator.get('/error', {
       appName: this.appName,
       by: 'time',
       order: 'DESC',
+      offset: (pageNumber - 1) * PAGE_SIZE,
+      limit: PAGE_SIZE
     });
-    this.setState({ errors: res });
+    this.setState({count, items, pageNumber});
   }
 
   renderPage () {
 
-    const {errors} = this.state;
-    if(!errors) {
+    const {count, items, pageNumber} = this.state;
+    if(!items) {
       return null;
     }
 
     return <div>
       <h3 style={{marginBottom: 20}} >Recent Errors</h3>
       {
-        errors.map((error, idx) => {
+        items.map((error, idx) => {
           return <SingleMsg error={error} key={idx} />
         })
       }
-      {/*<div style={{marginTop: 30, textAlign: 'center'}} >*/}
-        {/*<Pagination defaultCurrent={1} total={500} />*/}
-      {/*</div>*/}
+      <div style={{marginTop: 30, textAlign: 'center'}} >
+        <Pagination total={count} pageSize={PAGE_SIZE} current={pageNumber} onChange={(pageNumber) => {
+          this.fetchError(pageNumber).catch(alert);
+        }}/>
+      </div>
     </div>
   }
 

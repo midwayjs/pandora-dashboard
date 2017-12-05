@@ -20,7 +20,16 @@ export default class Dashboard extends WebServer {
     await super.start();
     const {port, host} = this.getPort();
     console.log(`Pandora.js Dashboard started, open http://${host}:${port}/`);
+    this.echoTestErrors().catch(console.error);
+  }
 
+  async echoTestErrors () {
+    for(let idx = 0; idx < 100; idx++) {
+      await new Promise(resolve => {
+        setTimeout(resolve, 200);
+      });
+      console.error(new Error('Test Errror ' + (idx + 1)));
+    }
   }
 
 }
