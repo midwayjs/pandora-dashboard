@@ -60,11 +60,11 @@ export class Metrics extends ApplicationPage {
 
           return <div key={idx} >
             <h3 style={{margin: '30px 0 15px 0'}} >Group: {name} </h3>
-            {ascendDimension(single.metrics, 4).map((row, idx) => {
+            {ascendDimension(single.metrics, 3).map((row, idx) => {
               return <Row gutter={16} key={idx} >
                 {
                   row.map((metric, idx) => {
-                    return <Col span={6} key={idx} >
+                    return <Col span={8} key={idx} >
                       <InstantaneousValue metric={metric} />
                     </Col>
 
@@ -87,14 +87,14 @@ const InstantaneousValue = (props) => {
   const {metric} = props;
   const tagKeys = Object.keys(metric.tags);
   return (
-    <Card bodyStyle={{padding: '15px 20px 17px 20px'}} style={{marginBottom: 16, borderColor: '#ddd', borderRadius: 0}} >
-      <div style={{fontSize: 26, marginBottom: 10, marginLeft: 7, lineHeight: 1.1}} >{displayValue(metric.value)}</div>
-      <div>
+    <Card bodyStyle={{padding: '15px 10px 17px 20px'}} style={{marginBottom: 16, borderColor: '#ddd', borderRadius: 0}} >
+      <div style={{fontSize: 26, marginBottom: 15, marginTop: 5, marginLeft: 7, lineHeight: 1.1}} >{displayValue(metric.value)}</div>
+      <div className="pandora-tag-namespace" >
         <Tag color="green" >{metric.metric.toString()}</Tag>
       </div>
       {
         tagKeys.length ? (
-          <div style={{marginTop: 5}} >
+          <div className="pandora-tag-namespace" >
             {
               tagKeys.map((key) => {
                 const value = metric.tags[key];

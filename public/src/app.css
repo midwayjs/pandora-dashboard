@@ -27,3 +27,15 @@ body .ant-tooltip-inner {
     word-break: break-all;
     max-width: 350px;
 }
+
+body .pandora-tag-namespace .ant-tag {
+    height: auto; line-height: 1.4;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+body .pandora-tag-namespace .ant-tag-text {
+    word-break: break-all;
+    white-space: normal;
+    height: auto;
+}
