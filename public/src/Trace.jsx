@@ -25,7 +25,7 @@ export class Trace extends ApplicationPage {
   async fetchTrace(pageNumber) {
     const {count, items} = await Actuator.get('/trace', {
       appName: this.appName,
-      by: 'timestamp',  // 这个参数并没有效果
+      //by: 'timestamp',  // never use
       order: 'DESC',
       offset: (pageNumber - 1) * PAGE_SIZE,
       limit: PAGE_SIZE
