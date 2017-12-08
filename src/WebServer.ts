@@ -44,8 +44,14 @@ export abstract class WebServer extends Koa {
 
   async start() {
     const {port, host} = this.getPort();
-    await new Promise((resolve) => {
-      this.server.listen({ port, host }, resolve);
+    await new Promise((resolve, reject) => {
+      this.server.listen({ port, host }, (err) => {
+        if(err) {
+          reject(err);
+          return;
+        }
+        resolve();
+      });
     });
   }
 
