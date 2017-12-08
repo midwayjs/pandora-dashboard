@@ -23,7 +23,7 @@ export class ErrorInspection extends ApplicationPage {
   async fetchError(pageNumber) {
     const {count, items} = await Actuator.get('/error', {
       appName: this.appName,
-      by: 'time',
+      // by: 'date', // nerver use
       order: 'DESC',
       offset: (pageNumber - 1) * PAGE_SIZE,
       limit: PAGE_SIZE
