@@ -81,7 +81,7 @@ export class Trace extends ApplicationPage {
     ];
 
     return <div>
-      <h3 style={{marginBottom: 20}} >Recent 1000 Traces</h3>
+      <h3 style={{marginBottom: 20}} >Traces</h3>
         <Table rowKey="traceId" columns={columns} dataSource={items} pagination={false} />
       <div style={{marginTop: 30, textAlign: 'center'}} >
         <Pagination total={count} pageSize={PAGE_SIZE} current={pageNumber} onChange={(pageNumber) => {
