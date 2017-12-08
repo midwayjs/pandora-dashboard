@@ -25,7 +25,7 @@ export class Trace extends ApplicationPage {
   async fetchTrace(pageNumber) {
     const {count, items} = await Actuator.get('/trace', {
       appName: this.appName,
-      by: 'time',
+      by: 'timestamp',  // 这个参数并没有效果
       order: 'DESC',
       offset: (pageNumber - 1) * PAGE_SIZE,
       limit: PAGE_SIZE
@@ -81,7 +81,7 @@ export class Trace extends ApplicationPage {
     ];
 
     return <div>
-      <h3 style={{marginBottom: 20}} >Traces</h3>
+      <h3 style={{marginBottom: 20}} >Recent Traces</h3>
         <Table rowKey="traceId" columns={columns} dataSource={items} pagination={false} />
       <div style={{marginTop: 30, textAlign: 'center'}} >
         <Pagination total={count} pageSize={PAGE_SIZE} current={pageNumber} onChange={(pageNumber) => {
