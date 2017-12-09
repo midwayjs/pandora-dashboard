@@ -40,11 +40,15 @@ export class ErrorInspection extends ApplicationPage {
 
     return <div>
       <h3 style={{marginBottom: 20}} >Recent Errors</h3>
-      {
+
+      {items.length ? (
         items.map((error, idx) => {
           return <SingleMsg error={error} key={idx} />
         })
-      }
+      ) : (
+        <p style={{textAlign: 'center', padding: 40}} >Empty</p>
+      )}
+
       <div style={{marginTop: 30, textAlign: 'center'}} >
         <Pagination total={count} pageSize={PAGE_SIZE} current={pageNumber} onChange={(pageNumber) => {
           this.fetchError(pageNumber).catch(alert);

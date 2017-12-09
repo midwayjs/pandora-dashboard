@@ -39,7 +39,7 @@ export class ProcessStructure extends ApplicationPage {
         <TabPane tab="Static Representation" key="2">
           <PreView logs={[{
               key: -1,
-              content: JSON.stringify(this.app.complex, null, 2)
+              content: JSON.stringify(this.app.structure, null, 2)
             }]} style={{minHeight: '60vh'}} />
         </TabPane>
       </Tabs>

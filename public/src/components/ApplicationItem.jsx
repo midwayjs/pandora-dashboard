@@ -14,7 +14,6 @@ export class ApplicationItem extends Component {
   render () {
 
     const {app} = this.props;
-    const restartCount = Math.max(0, app.startCount - 1);
 
     const title = <div style={{fontWeight: 'normal', fontSize: 12, paddingLeft: 5, paddingBottom: 15, marginBottom: 10, borderBottom: '1px solid #ddd'}} >
       <div>
@@ -31,7 +30,7 @@ export class ApplicationItem extends Component {
             <b>PID:</b> {app.pids.join(', ')}
           </span>
           <span style={styles.titleIndicator} >
-            <b>Restart Count:</b> {restartCount}
+            <b>Restart Count:</b> {app.restartCount}
           </span>
         </p>
       </div>

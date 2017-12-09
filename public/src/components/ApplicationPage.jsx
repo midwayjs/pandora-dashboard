@@ -118,7 +118,7 @@ export class ApplicationPage extends Component {
                 <b>PID:</b> {safe(() => app.pids.join(', '))}
               </span>
             <span style={styles.titleIndicator} >
-                <b>Restart Count:</b> {safe(() => Math.max(0, app.startCount - 1), '-')}
+                <b>Restart Count:</b> {safe(() => app.restartCount, '-')}
               </span>
           </p>
 
