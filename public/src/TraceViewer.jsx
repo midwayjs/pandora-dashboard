@@ -111,7 +111,7 @@ export class TraceViewer extends ApplicationPage {
         <Tag style={styles.majorTag} color="108ee9" >Duration: {displayDuration(trace.duration)}</Tag>
         <Tag style={styles.majorTag} color="108ee9" >Time: {moment(trace.timestamp).format('L LTS')}</Tag>
         </div>
-      <Table rowKey="rowKey" indentSize={10} columns={columns} dataSource={tree} pagination={false} />
+      <Table defaultExpandAllRows={true} rowKey="rowKey" indentSize={10} columns={columns} dataSource={tree} pagination={false} />
     </div>;
 
   }
