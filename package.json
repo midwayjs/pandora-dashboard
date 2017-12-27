@@ -41,6 +41,7 @@
     "urllib": "^2.25.1"
   },
   "files": [
+    "bin",
     "dist",
     "public/build",
     "procfile.js",
