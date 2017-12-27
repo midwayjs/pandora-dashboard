@@ -1,6 +1,6 @@
 {
   "name": "pandora-dashboard",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A local Dashboard for the Pandora.js.",
   "main": "index.js",
   "bin": {
