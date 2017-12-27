@@ -1,0 +1,5 @@
+#!/usr/bin/env node
+"use strict";
+
+const {join} = require('path');
+console.log(join(__dirname, '../'));

@@ -3,6 +3,9 @@
   "version": "1.0.4",
   "description": "A local Dashboard for the Pandora.js.",
   "main": "index.js",
+  "bin": {
+    "pandora-dashboard-dir": "bin/pandora-dashboard-dir"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run lint && tsc && npm run build-public",
@@ -24,6 +27,7 @@
   "homepage": "https://github.com/midwayjs/pandora-dashboard#readme",
   "dependencies": {
     "@types/mz": "0.0.32",
+    "dorapan": "^1.0.5",
     "koa": "^2.4.1",
     "koa-error": "^3.1.0",
     "koa-mount": "^3.0.0",

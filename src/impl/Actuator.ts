@@ -1,6 +1,9 @@
 import Dashboard from '../Dashboard';
 import urllib = require('urllib');
 import {attachPPID} from '../utils/Common';
+const {GlobalConfigProcessor} = require('dorapan');
+const globalConfig = GlobalConfigProcessor.getInstance().getAllProperties();
+const actuatorPort = globalConfig.actuator.http.port;
 
 export class Actuator {
 
@@ -17,7 +20,7 @@ export class Actuator {
   }
 
   static async get(url) {
-    const remoteUrl = 'http://127.0.0.1:7002' + url;
+    const remoteUrl = 'http://127.0.0.1:' + actuatorPort + url;
     const res = await urllib.request(remoteUrl, {
       timeout: 5000,
       dataType: 'json'

@@ -6,10 +6,11 @@ The Dashboard it is a standard Pandora.js Project, manage it like a normal Proje
 
 ## Usage
 
+### Install globaly
+
 ```bash
-cd ~
-npm i pandora-dashboard
-pandora start --name dashboard --npm pandora-dashboard
+$ npm i pandora-dashboard -g # install pandora-dashboard globally
+$ pandora start --name dashboard `pandora-dashboard-dir` # start it
 ```
 
 open `http://127.0.0.1:9081`
