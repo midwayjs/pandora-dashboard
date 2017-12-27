@@ -64,7 +64,7 @@ export class TraceViewer extends ApplicationPage {
             return null;
           }
           const eleTags = tagKeys.map((key, idx) => {
-            const value = tags[key].value;
+            const value = (tags[key] != null && tags[key].value) || tags[key] || '';
             const text = `${key}: ${displayValue(value)}`;
             const eleTag = <Tag title={text} style={{
               marginBottom: 6, whiteSpace: 'nowrap',
