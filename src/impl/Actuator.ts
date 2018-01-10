@@ -26,7 +26,11 @@ export class Actuator {
       dataType: 'json'
     });
     if(/^\/process/.test(url) && res.data.success && res.data.data) {
-      await attachPPID(res.data.data);
+      try {
+        await attachPPID(res.data.data);
+      } catch(err) {
+        // pass
+      }
     }
     return res.data;
   }
