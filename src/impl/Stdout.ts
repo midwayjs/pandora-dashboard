@@ -18,11 +18,13 @@ export class Stdout {
   setup () {
 
     this.app.server.on('upgrade', (request, socket, head) => {
+
       const regRes = /^\/stdout\/(.*)$/.exec(request.url);
       if(!regRes) {
-        socket.end();
         return;
       }
+      socket.wsHasBeenTaken = true;
+
       const appName = regRes[1];
       this.wss.handleUpgrade(request, socket, head, (ws) => {
         this.handleConnection(appName, ws).catch((error) => {

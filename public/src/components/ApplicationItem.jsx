@@ -5,6 +5,7 @@ import IconMap from 'react-icons/lib/md/map';
 import IconTraffic from 'react-icons/lib/md/traffic';
 import IconHighlight from 'react-icons/lib/md/highlight';
 import IconStraighten from 'react-icons/lib/md/straighten';
+import IconBugRport from 'react-icons/lib/md/bug-report';
 import { Link } from 'react-router-dom';
 import {displayDuration, stateToDisplay} from "../utils/Common";
 
@@ -83,6 +84,17 @@ export class ApplicationItem extends Component {
               <span style={styles.actionIconText} >Trace</span>
             </div>
           </Link>
+
+          <div style={styles.actionSplitter} ></div>
+
+          <Link to={`/application/${app.appName}/debugger`} >
+            <div style={styles.actionIcon} className="actionIcon" >
+              <IconBugRport size={32} />
+              <br/>
+              <span style={styles.actionIconText} >Debugger</span>
+            </div>
+          </Link>
+
 
         </div>
 

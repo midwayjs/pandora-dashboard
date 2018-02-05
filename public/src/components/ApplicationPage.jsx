@@ -92,6 +92,9 @@ export class ApplicationPage extends Component {
             <Menu.Item key="trace">
               <Link to={`/application/${this.appName}/trace`} >Trace</Link>
             </Menu.Item>
+            <Menu.Item key="debugger">
+              <Link to={`/application/${this.appName}/debugger`} >Debugger</Link>
+            </Menu.Item>
           </Menu>
         </Sider>
         {content}

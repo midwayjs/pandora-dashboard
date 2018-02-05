@@ -11,6 +11,7 @@ import {ErrorInspection} from "./ErrorInspection";
 import {Metrics} from "./Metrics";
 import {Trace} from "./Trace";
 import {TraceViewer} from "./TraceViewer";
+import {Debugger} from './Debugger';
 
 class ScrollToTop extends Component {
 
@@ -37,6 +38,7 @@ ReactDOM.render((
       <Route path='/application/:appName/:methodName(metrics)' component={Metrics} ></Route>
       <Route path='/application/:appName/:methodName(trace)' component={Trace} ></Route>
       <Route path='/application/:appName/:methodName(traceViewer)/:traceId' component={TraceViewer} ></Route>
+      <Route path='/application/:appName/:methodName(debugger)' component={Debugger} ></Route>
     </LayoutCpnt>
   </BrowserRouter>
 ), document.getElementById('DUMP_APP_HERE'));

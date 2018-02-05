@@ -3,11 +3,13 @@ import {Home} from './impl/Home';
 import {Static} from './impl/Static';
 import {Actuator} from './impl/Actuator';
 import {Stdout} from './impl/Stdout';
+import {ChromeDevtools} from './impl/ChromeDevtools';
+import {DebuggerProxy} from './impl/DebuggerProxy';
 
 export default class Dashboard extends WebServer {
 
   getRoutes() {
-    return [ Stdout, Actuator, Static, Home ];
+    return [ ChromeDevtools, DebuggerProxy, Stdout, Actuator, Static, Home ];
   }
 
   getPort() {
@@ -20,7 +22,7 @@ export default class Dashboard extends WebServer {
     await super.start();
     const {port, host} = this.getPort();
     console.log(`Pandora.js Dashboard started, open http://${host}:${port}/`);
-    this.echoTestErrors().catch(console.error);
+    // this.echoTestErrors().catch(console.error);
   }
 
   async echoTestErrors () {
