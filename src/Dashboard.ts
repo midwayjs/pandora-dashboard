@@ -5,8 +5,30 @@ import {Actuator} from './impl/Actuator';
 import {Stdout} from './impl/Stdout';
 import {ChromeDevtools} from './impl/ChromeDevtools';
 import {DebuggerProxy} from './impl/DebuggerProxy';
+import * as auth from 'basic-auth';
 
 export default class Dashboard extends WebServer {
+
+  setup() {
+    const PANDORA_DASHBOARD_AUTH = process.env.PANDORA_DASHBOARD_AUTH;
+    let authName, authPass;
+    if(typeof PANDORA_DASHBOARD_AUTH === 'string') {
+      [authName, authPass] = PANDORA_DASHBOARD_AUTH.split(':');
+    }
+    if(authName && authPass) {
+      this.use( async (ctx, next) => {
+        const credentials = auth(ctx.req);
+        if (!credentials || credentials.name !== authName || credentials.pass !== authPass) {
+          ctx.status = 401;
+          ctx.set('WWW-Authenticate', 'Basic');
+          ctx.body = 'Access denied';
+        } else {
+          await next();
+        }
+      });
+    }
+    super.setup();
+  }
 
   getRoutes() {
     return [ ChromeDevtools, DebuggerProxy, Stdout, Actuator, Static, Home ];

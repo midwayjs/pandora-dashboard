@@ -24,10 +24,16 @@ export class Debugger extends ApplicationPage {
     this.setState({processes});
   }
 
-
-
   renderPage () {
     const {processes, app} = this.state;
+    const {structure} = app;
+    if(!structure.inspector) {
+      return <div style={{fontSize: 14}} >
+        <h3 style={{marginBottom: 20}} >Debugger</h3>
+        <p>Please restart this application with the --inspect option, like below.</p>
+        <p>pandora start --inspect</p>
+      </div>;
+    }
     return <div>
       <h3 style={{marginBottom: 20}} >Debugger</h3>
       {processes ? <ProcessTree appName={this.appName} processes={processes} extPart={(process) => {

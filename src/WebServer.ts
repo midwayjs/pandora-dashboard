@@ -38,7 +38,6 @@ export abstract class WebServer extends Koa {
       }
     }
     this.server.on('upgrade', (request, socket) => {
-      console.log(1234);
       if(!socket.wsHasBeenTaken) {
         socket.end();
       }
