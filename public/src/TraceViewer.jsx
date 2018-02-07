@@ -105,6 +105,9 @@ export class TraceViewer extends ApplicationPage {
           }
           tagKeys = orderTags(record.name, tagKeys);
           const eleTags = tagKeys.map((key, idx) => {
+            if(!tags[key]) {
+              return null;
+            }
             const value = tags[key].value;
             const text = `${key}: ${displayValue(value)}`;
             const eleTag = <Tag title={text} style={{

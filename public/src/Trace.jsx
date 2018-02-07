@@ -48,11 +48,6 @@ export class Trace extends ApplicationPage {
         key: 'name',
         render: (_, record) => {
 
-          const id = record.traceId;
-          const eye = id && id[23] === '0' && id[24] === '0' ? (
-            <a style={{marginLeft: 10}} href={`http://eagleeye.alibaba-inc.com/trace/callChain.htm?traceId=${id}`} target="_blank" >鹰眼链路</a>
-          ) : null;
-
           const statusPlan = getTraceStatus(record) || {};
           const {color, label} = statusPlan;
 
@@ -68,7 +63,6 @@ export class Trace extends ApplicationPage {
                 style={{ color }}
                 to={`/application/${this.appName}/traceViewer/${record.traceId}`} target="_blank"
               >{label ? `[${label.join('] [')}] ` : null}{record.name}</Link>
-              {eye}
             </div>
             <div style={{fontSize: 12, color: '#666'}} >Trace ID: {record.traceId}</div>
           </div>;
