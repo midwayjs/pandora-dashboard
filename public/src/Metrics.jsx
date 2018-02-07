@@ -30,11 +30,15 @@ export class Metrics extends ApplicationPage {
   }
 
   async fetchMetrics() {
-    const groups = await Actuator.get('/metrics/list');
+    const groups = await Actuator.get('/metrics/list', {
+      appName: this.app.appName
+    });
     const groupNames = Object.keys(groups);
     const displayList = [];
     for(const group of groupNames) {
-      const res = await Actuator.get('/metrics/' + group);
+      const res = await Actuator.get('/metrics/' + group, {
+        appName: this.app.appName
+      });
       displayList.push({
         group: group,
         metrics: res
