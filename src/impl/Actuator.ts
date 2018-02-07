@@ -20,7 +20,7 @@ export class Actuator {
   }
 
   static async get(url) {
-    const backend = process.env.PANDORA_DASHBOARD_BACKEND || 'http://127.0.0.1:' + actuatorPort;
+    const backend = process.env.DASHBOARD_BACKEND || 'http://127.0.0.1:' + actuatorPort;
       // http://testgw.proxy.taobao.org/
     const remoteUrl = backend + url;
     const res = await urllib.request(remoteUrl, {

@@ -23,6 +23,15 @@ By default, The Dashboard listens to `http://127.0.0.1:9081`. But it also can te
 pandora start --name dashboard --env "DASHBORAD_PORT=9081 DASHBOARD_HOST=0.0.0.0" --npm pandora-dashboard
 ```
 
+## HTTP Auth
+
+Set a environment variable like below:
+
+```bash
+pandora start --name dashboard --env "DASHBORAD_AUTH=admin:admin" --npm pandora-dashboard
+
+```
+
 ## How to Contribute
 
 ### Back-End

@@ -10,10 +10,10 @@ import * as auth from 'basic-auth';
 export default class Dashboard extends WebServer {
 
   setup() {
-    const PANDORA_DASHBOARD_AUTH = process.env.PANDORA_DASHBOARD_AUTH;
+    const DASHBOARD_AUTH = process.env.DASHBOARD_AUTH;
     let authName, authPass;
-    if(typeof PANDORA_DASHBOARD_AUTH === 'string') {
-      [authName, authPass] = PANDORA_DASHBOARD_AUTH.split(':');
+    if(typeof DASHBOARD_AUTH === 'string') {
+      [authName, authPass] = DASHBOARD_AUTH.split(':');
     }
     if(authName && authPass) {
       this.use( async (ctx, next) => {
