@@ -20,7 +20,7 @@ open `http://127.0.0.1:9081`
 By default, The Dashboard listens to `http://127.0.0.1:9081`. But it also can tell The Dashboard a specific TCP Port and a specific IP Address to listen on.
 
 ```bash
-pandora start --name dashboard --env "DASHBORAD_PORT=9081 DASHBOARD_HOST=0.0.0.0" --npm pandora-dashboard
+pandora start --name dashboard --env "DASHBORAD_PORT=9081 DASHBOARD_HOST=0.0.0.0" `pandora-dashboard-dir`
 ```
 
 ## HTTP Auth
@@ -28,7 +28,7 @@ pandora start --name dashboard --env "DASHBORAD_PORT=9081 DASHBOARD_HOST=0.0.0.0
 Set a environment variable like below:
 
 ```bash
-pandora start --name dashboard --env "DASHBORAD_AUTH=admin:admin" --npm pandora-dashboard
+pandora start --name dashboard --env "DASHBORAD_AUTH=admin:admin" `pandora-dashboard-dir`
 
 ```
 
