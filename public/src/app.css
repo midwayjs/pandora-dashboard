@@ -18,8 +18,8 @@ body {
 }
 
 
-body .ant-tabs-nav-wrap {
-    height: 42px;
+body .ant-tabs-nav .ant-tabs-tab {
+    height: auto;
 }
 
 body .ant-tooltip-inner {
@@ -39,3 +39,31 @@ body .pandora-tag-namespace .ant-tag-text {
     white-space: normal;
     height: auto;
 }
+
+body .ApplicationPageSide {
+    position: relative;
+    min-height: 100vh;
+}
+body .ApplicationPageSide .ant-layout-sider-children {
+    height: 100%; width: 100%;
+    position: absolute; right: 0; top: 0;
+}
+
+.trace-container-pandora .ant-table {
+    font-size: 13px;
+}
+.trace-container-pandora .ant-table .ant-table-thead > tr > th,
+.trace-container-pandora .ant-table .ant-table-tbody > tr > td {
+    padding: 16px 10px;
+}
+
+.pandoraTagWrapper::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 9px;
+}
+.pandoraTagWrapper::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.3);
+}
+

@@ -75,7 +75,7 @@ export class ApplicationPage extends Component {
     }
 
     return <Layout style={{background: '#fff'}} >
-        <Sider width={200} style={{ background: '#fff' }} >
+        <Sider width={200} style={{ background: '#fff' }} className={"ApplicationPageSide"} >
           <Menu style={{minHeight: '100%'}} selectedKeys={[methodName]}>
             <Menu.Item key="stdout">
               <Link to={`/application/${this.appName}/stdout`} >Standard Output</Link>

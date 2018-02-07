@@ -1,9 +1,13 @@
 import React from 'react';
 import {Actuator} from './utils/Actuator';
 import {ApplicationPage} from "./components/ApplicationPage";
-import {Table, Tag, Tooltip} from 'antd';
+import {Table, Tag, Tooltip, Modal} from 'antd';
 import {SpanCostIndicator} from "./components/SpanCostIndicator";
-import {displayDuration, displayValue} from "./utils/Common";
+import {
+  attachChildrenTimeOrder, displayDuration, displayValue, getTraceStatus, isErrorSpan,
+  orderTags
+} from "./utils/Common";
+import TextareaAutosize from 'react-autosize-textarea';
 import moment from "moment";
 
 export class TraceViewer extends ApplicationPage {
@@ -29,6 +33,27 @@ export class TraceViewer extends ApplicationPage {
     this.setState({trace});
   }
 
+  renderTitle() {
+
+    const {trace: record} = this.state;
+
+    const statusPlan = getTraceStatus(record) || {};
+    const {color, label} = statusPlan;
+
+    return <div>
+      <div style={{padding: '0 3px 7px 3px', fontSize: 24, fontWeight: 'bold'}} >
+        <span style={{color}} >{label ? `[${label.join('] [')}] ` : null}{record.name}</span>
+      </div>
+      <div style={{marginBottom: 18, paddingLeft: 3}} >
+        <span style={styles.majorTag} color="#2db7f5" >Trace ID: {this.traceId}</span>
+        <span style={styles.majorTag} color="#2db7f5" >Host: {record.host}</span>
+        <span style={styles.majorTag} color="#2db7f5" >PID: {record.pid}</span>
+        <span style={styles.majorTag} color="#2db7f5" >Duration: {displayDuration(record.duration)}</span>
+        <span style={styles.majorTag} color="#2db7f5" >Time: {moment(parseInt(record.timestamp)).format('L LTS')}</span>
+      </div>
+    </div>;
+  }
+
   renderPage () {
 
     const {trace} = this.state;
@@ -38,47 +63,16 @@ export class TraceViewer extends ApplicationPage {
 
     const columns = [
       {
-        title: 'Span ID',
-        dataIndex: 'context.spanId',
-        key: 'spanId',
-        width: '20%'
-      },
-      {
-        title: 'Operation Name',
+        title: 'Span',
         dataIndex: 'name',
+        width: '240px',
         key: 'name',
-        width: '10%',
-        render: (text) => {
-          return <Tag color="green" >{text}</Tag>
-
-        }
-      },
-      {
-        title: 'Tags',
-        dataIndex: 'tags',
-        key: 'tags',
-        width: '35%',
-        render: (tags) => {
-          const tagKeys = Object.keys(tags);
-          if(!tags || !tagKeys.length) {
-            return null;
-          }
-          const eleTags = tagKeys.map((key, idx) => {
-            const value = (tags[key] != null && tags[key].value) || tags[key] || '';
-            const text = `${key}: ${displayValue(value)}`;
-            const eleTag = <Tag title={text} style={{
-              marginBottom: 6, whiteSpace: 'nowrap',
-              textOverflow: 'ellipsis', overflow: 'hidden',
-              maxWidth: '49%'
-            }} >{text}</Tag>;
-            return <Tooltip key={idx} placement={'top'} trigger={'hover'} title={text} onClick={() => {
-              prompt('Tag: ' + key, displayValue(value));
-            }} >
-              {eleTag}
-            </Tooltip>;
-          });
-          return <div style={{maxHeight: 60, overflow: 'auto', overflowX: 'hidden', maxWidth: 'calc(100vw/3)'}} >
-            {eleTags}
+        render: (_, record) => {
+          return <div style={{display: 'inline-block', verticalAlign: 'top'}} >
+            <div style={{paddingBottom: 5, fontSize: 14, fontWeight: 'bold'}} >
+              Span: <Tag color={isErrorSpan(record) ? '#f50' : '#108ee9'} >{record.name}</Tag>
+            </div>
+            <div style={{fontSize: 12, color: '#666'}} >ID: {record.context && record.context.spanId}</div>
           </div>;
         }
       },
@@ -86,56 +80,127 @@ export class TraceViewer extends ApplicationPage {
         title: 'Duration',
         dataIndex: 'duration',
         key: 'duration',
-        width: '10%',
+        width: '100px',
         render: displayDuration
       },
       {
-        width: 'auto',
+        width: '25%',
         title: 'Timeline',
         key: 'timeline',
         render: (_, record) => {
-          return <SpanCostIndicator style={{marginRight: 10}} start={record.timestamp - trace.timestamp} duration={record.duration} total={trace.duration}  />
+          return <SpanCostIndicator
+            color={isErrorSpan(record) ? '#f50' : null}
+            style={{marginRight: 10}} start={record.timestamp - trace.timestamp} duration={record.duration} total={trace.duration} />;
         }
-      }
+      },
+      {
+        title: 'Extension',
+        dataIndex: 'tags',
+        key: 'tags',
+        width: '35%',
+        render: (tags, record) => {
+          let tagKeys = Object.keys(tags);
+          if (!tags || !tagKeys.length) {
+            return null;
+          }
+          tagKeys = orderTags(record.name, tagKeys);
+          const eleTags = tagKeys.map((key, idx) => {
+            const value = tags[key].value;
+            const text = `${key}: ${displayValue(value)}`;
+            const eleTag = <Tag title={text} style={{
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis', overflow: 'hidden',
+              maxWidth: '97%', marginBottom: 5
+            }}>{text}</Tag>;
+            return <Tooltip key={idx} placement={'bottom'} trigger={'hover'} title={text} onClick={() => {
+              prompt('Tag: ' + key, displayValue(value));
+            }} >
+              {eleTag}
+            </Tooltip>;
+          });
+
+          const logsOnClick = () => {
+
+            const logs = record.logs;
+
+            const logsEle = logs.map((log, idx) => {
+              return <div key={idx} style={{marginBottom: 30}} >
+                <h2>Record Time: {moment(parseInt(log.timestamp)).format('L LTS')}</h2>
+                {
+                  log.fields && log.fields.length ? (
+                    log.fields.map((field, idx) => {
+                      return <div key={idx} style={{marginTop: 17}} >
+                        <h3 style={{marginBottom: 10}} >Key: {field.key}</h3>
+                        <TextareaAutosize
+                          style={{minHeight: 100, padding: 10, display: 'block', width: '100%', borderColor: '#999', fontSize: 13}}
+                          defaultValue={field.value} />
+                      </div>;
+                    })
+                  ) : null
+                }
+              </div>;
+            });
+
+            Modal.info({
+              zIndex: 9999,
+              width: '800px',
+              okText: 'OK',
+              content: <div style={{marginBottom: '-25px'}} >
+                {logsEle}
+              </div>
+            });
+
+          };
+
+          const logsEle = record.logs && record.logs.length ? <div style={{marginBottom: 10}} >
+
+            <a href="#" style={{fontWeight: 'bold'}} onClick={(e) => {
+              e.preventDefault();
+              logsOnClick();
+            }} >
+              See all logs ( including { record.logs.map((log) => {
+              if (!log.fields || !log.fields.length) {
+                return null;
+              }
+              return log.fields.map((field) => {
+                return field.key;
+              }).join(', ');
+            }).filter((text) => !!text).join(', ') } )
+            </a>
+
+          </div> : null;
+
+          return <div>
+            {logsEle}
+            <div className="pandoraTagWrapper" style={{
+              marginBottom: '-4px',
+              maxHeight: 54, overflow: 'auto', overflowX: 'hidden', maxWidth: 'calc(100vw/4)'}} >
+              {eleTags}
+            </div>
+          </div>;
+        }
+      },
     ];
 
+    const tree = [attachChildrenTimeOrder(trace.spans[0], trace.spans)];
 
-    const tree = [attachChildren(trace.spans[0], trace.spans)];
-
-    return <div>
-      <h2 style={{marginBottom: 14}} >Trace Viewer</h2>
-      <div style={{marginBottom: 18}} >
-        <Tag style={styles.majorTag} color="108ee9" >TraceId: {this.traceId}</Tag>
-        <Tag style={styles.majorTag} color="108ee9" >Transaction: {trace.name}</Tag>
-        <Tag style={styles.majorTag} color="108ee9" >PID: {trace.pid}</Tag>
-        <Tag style={styles.majorTag} color="108ee9" >Duration: {displayDuration(trace.duration)}</Tag>
-        <Tag style={styles.majorTag} color="108ee9" >Time: {moment(trace.timestamp).format('L LTS')}</Tag>
-        </div>
-      <Table defaultExpandAllRows={true} rowKey="rowKey" indentSize={10} columns={columns} dataSource={tree} pagination={false} />
+    return <div className="trace-container-pandora" >
+      <div style={{marginBottom: 25}} >
+        {this.renderTitle()}
+      </div>
+      <Table defaultExpandAllRows={true} rowKey="rowKey" indentSize={10}
+             columns={columns} dataSource={tree} pagination={false} />
     </div>;
 
   }
 
 }
 
-function attachChildren (lead, spans) {
-  const spanId = lead.context.spanId;
-  const children = [];
-  lead.rowKey = spanId;
-  for(const span of spans) {
-    if(span.context.parentId && span.context.parentId === spanId) {
-      attachChildren(span, spans);
-      children.push(span);
-    }
-  }
-  if(children.length) {
-    lead.children = children;
-  }
-  return lead;
-}
-
 const styles = {
   majorTag: {
-    marginBottom: 6
+    color: '#666',
+    marginBottom: 6,
+    marginRight: 15,
+    fontSize: 13
   }
 };

@@ -4,7 +4,7 @@ import {ApplicationPage} from "./components/ApplicationPage";
 import {Table, Pagination} from 'antd';
 import {Link} from "react-router-dom";
 import moment from "moment";
-import {displayDuration} from "./utils/Common";
+import {displayDuration, getTraceStatus} from "./utils/Common";
 
 const PAGE_SIZE = 20;
 
@@ -43,41 +43,60 @@ export class Trace extends ApplicationPage {
 
     const columns = [
       {
-        title: 'Trace ID',
-        dataIndex: 'traceId',
-        key: 'traceId'
-      },
-      {
-        title: 'Transaction',
+        title: 'Trace',
         dataIndex: 'name',
-        key: 'name'
-      },
-      {
-        title: 'PID',
-        dataIndex: 'pid',
-        key: 'pid'
+        key: 'name',
+        render: (_, record) => {
+
+          const id = record.traceId;
+          const eye = id && id[23] === '0' && id[24] === '0' ? (
+            <a style={{marginLeft: 10}} href={`http://eagleeye.alibaba-inc.com/trace/callChain.htm?traceId=${id}`} target="_blank" >鹰眼链路</a>
+          ) : null;
+
+          const statusPlan = getTraceStatus(record) || {};
+          const {color, label} = statusPlan;
+
+          return <div>
+            <div
+              style={{
+                color,
+                paddingBottom: 5,
+                fontSize: 14,
+                fontWeight: 'bold'
+              }} >
+              <Link
+                style={{ color }}
+                to={`/application/${this.appName}/traceViewer/${record.traceId}`} target="_blank"
+              >{label ? `[${label.join('] [')}] ` : null}{record.name}</Link>
+              {eye}
+            </div>
+            <div style={{fontSize: 12, color: '#666'}} >Trace ID: {record.traceId}</div>
+          </div>;
+
+        }
       },
       {
         title: 'Duration',
+        width: '100px',
         dataIndex: 'duration',
         key: 'duration',
         render: displayDuration
       },
       {
         title: 'Time',
+        width: '180px',
         dataIndex: 'timestamp',
         key: 'timestamp',
         render(ts) {
-          return moment(ts).format('L LTS');
+          return moment(parseInt(ts)).format('L LTS');
         }
       },
       {
-        title: 'Action',
-        key: 'action',
-        render: (text, record) => {
-          return <Link to={`/application/${this.appName}/traceViewer/${record.traceId}`} target="_blank" >Take a look</Link>
-        }
-      }
+        title: 'PID',
+        dataIndex: 'pid',
+        key: 'pid',
+        width: '110px'
+      },
     ];
 
     return <div>

@@ -14,7 +14,8 @@ export const SpanCostIndicator = (props) => {
       position: 'absolute',
       top: 0, left: startPercent * 100 + '%',
       width: durationPercent * 100 + '%', height: '100%',
-      background: '#108ee9',
+      minWidth: '2px',
+      background: props.color || '#108ee9',
       borderRadius: 5
     }} />
   </div>;
