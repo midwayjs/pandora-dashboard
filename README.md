@@ -39,8 +39,7 @@ pandora start --name dashboard --env "DASHBOARD_AUTH=admin:admin" `pandora-dashb
 Run `pandora dev`, that will start the project by TypeScript source files through `ts-node/register`.
 ### Front-End
 
-The fonrt-end side is a React Project, it using React-Router to make it as a SPA, it using Webpack to build `bundle.js` file to distributing.
-
+The front-end is a React application which relies on `[react-router](https://github.com/ReactTraining/react-router)` for navigation. `[webpack](https://github.com/webpack/webpack)` is being used as the module resolver and the build tool producing a single `bundle.js` for distribution.
 
 **webpack-dev-server**
 
