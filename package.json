@@ -28,7 +28,7 @@
   "dependencies": {
     "@types/mz": "0.0.32",
     "basic-auth": "^2.0.0",
-    "chrome-devtools-frontend": "^1.0.526395",
+    "chrome-devtools-frontend": "1.0.526395",
     "dorapan": "^1.0.5",
     "koa": "^2.4.1",
     "koa-error": "^3.1.0",
